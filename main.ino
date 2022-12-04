@@ -1,18 +1,17 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid     = "JRC222";
-const char* password = "juniourrobotics222club";
+const char* ssid     = "Captain elec";
+const char* password = "Mi639338##";
 
 const char* SERVER_NAME = "http://jrc.captainelectronicsbd.com/projects/solardata/gpsdata.php";
 
 String ESP32_API_KEY = "Ad5F10jkBM0";
 unsigned long previousMillis = 0;
 long interval = 30000;
-
-float volt = 12.00;
-float amp = 2.5;
-float watt = volt*amp;
+float voltdata=12;
+float ampdata = 2.5;
+float wattdata = voltdata*ampdata;
 
 void setup() {
   
@@ -42,7 +41,10 @@ void loop() {
     
     http.begin(SERVER_NAME);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-   
+  String volt, amp, watt;
+     volt = String(voltdata,2);
+     amp = String(ampdata,2);
+     watt = String(wattdata,2);
     String gps_data;
     gps_data = "api_key="+ESP32_API_KEY;
     gps_data += "&volt="+volt;
@@ -51,7 +53,7 @@ void loop() {
     
     
     Serial.print("gps_data: ");
-    Serial.println(gps_data);
+   Serial.println(gps_data);
     int httpResponseCode = http.POST(gps_data);
     String httpResponseString = http.getString();
   
@@ -74,4 +76,3 @@ void loop() {
   }
   delay(1000);  
 }
-
