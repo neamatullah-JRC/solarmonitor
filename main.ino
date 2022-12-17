@@ -1,21 +1,22 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid     = "Captain elec";
-const char* password = "Mi639338##";
+const char* ssid     = "JRC222";
+const char* password = "juniourrobotics222club";
 
 const char* SERVER_NAME = "http://jrc.captainelectronicsbd.com/projects/solardata/gpsdata.php";
 
 String ESP32_API_KEY = "Ad5F10jkBM0";
 unsigned long previousMillis = 0;
 long interval = 30000;
-float voltdata=12;
-float ampdata = 2.5;
-float wattdata = voltdata*ampdata;
+float voltdata;
+float ampdata;
+
 
 void setup() {
   
   Serial.begin(115200);
+  
   Serial.println("esp32 serial initialize");
 
   WiFi.begin(ssid, password);
@@ -31,14 +32,19 @@ void setup() {
 }
 
 void loop() {
-  
+   float voltdata = (float)analogRead(A0) / 4096 * 15 * 28205 / 27000;
+  float ampdata = (float)analogRead(A3) / 4096 * 15 * 28205 / 27000;
+Serial.println(voltdata);
+Serial.println(ampdata);
   if(WiFi.status()== WL_CONNECTED){
     unsigned long currentMillis = millis();
     if(currentMillis - previousMillis > interval) {
        previousMillis = currentMillis;
        //Send an HTTP POST request every 30 second
     HTTPClient http;
-    
+
+     float wattdata = voltdata*ampdata;
+     
     http.begin(SERVER_NAME);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
   String volt, amp, watt;
